@@ -1,0 +1,173 @@
+* {
+	box-sizing: border-box;
+	margin: 0;
+	font-family: 'Poller One', cursive;
+}
+
+body {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	gap: 6em;
+	padding: 5%;
+	align-items: center;
+	background-image: url('http://i683.photobucket.com/albums/vv193/livingdead0666/animations/starfield.gif');
+}
+
+/* header section with a img text and logo */
+.header {
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+}
+
+.img-text {
+	width: 65%;
+	height: 50%;
+}
+
+.logo {
+	width: 15%;
+	height: 5%;
+	cursor: pointer;
+}
+
+/* app with results container and menu with buttons on the right */
+.app-container {
+	display: flex;
+	width: 75vw;
+	height: 60vh;
+}
+
+.main {
+	width: 100%;
+	height: 100%;
+	gap: 1em;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+	border-radius: 10px;
+	color: white;
+	background-color: rgba(94, 94, 108, 0.452);
+	background-image: url(./images/bg-ConvertImage.png);
+	opacity: 0.6;
+}
+
+/* results counter and search input */
+.top-search {
+	width: 98%;
+	height: 5%;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+#number-results {
+	padding-left: 1em;
+	font-size: 0.8em;
+}
+input {
+	margin-right: 1em;
+	width: 15%;
+	height: 100%;
+	background-color: rgba(94, 94, 108, 0.452);
+	border: none;
+	border-radius: 3px;
+	color: white;
+	text-align: center;
+}
+::placeholder {
+	color: white;
+}
+
+/* table with results */
+.results-container {
+	width: 95%;
+	height: 95%;
+}
+table {
+	border-collapse: collapse;
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	table-layout: fixed;
+	height: 100%;
+}
+
+th:first-of-type {
+	width: 2em;
+	column-width: 3em;
+}
+td:first-of-type {
+	width: 2em;
+	column-width: 3em;
+}
+
+table tr {
+	padding: 0.35em;
+}
+
+table th,
+table td {
+	padding: 0.5em;
+	text-align: center;
+}
+
+table th {
+	font-size: 0.85em;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	background-color: #000000;
+	opacity: 0.6;
+	color: white;
+}
+
+table td {
+	font-size: 0.8em;
+}
+
+img#info-button,
+img#delete-button {
+	margin-right: 0.5em;
+	width: 2em;
+	height: 2em;
+	cursor: pointer;
+}
+
+/* buttons prev/next page and page counters */
+.bottom-nav {
+	width: 95%;
+	height: 5%;
+	display: flex;
+	justify-content: right;
+	align-items: center;
+	gap: 3%;
+}
+.bottom-buttons {
+	font-size: 0.8em;
+}
+
+/* menu buttons */
+.menu {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	gap: 2em;
+	width: 20%;
+	height: 100%;
+	background-color: transparent;
+}
+
+.menu-button {
+	height: 10%;
+	width: 80%;
+	text-align: center;
+	vertical-align: middle;
+	cursor: pointer;
+	border: 1.5px solid rgb(200, 166, 29);
+	text-decoration: none;
+	border-radius: 5px;
+	background-color: rgba(94, 94, 108, 0.452);
+	color: white;
+}

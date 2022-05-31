@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Poller+One&display=swap"
+			rel="stylesheet"
+		/>
+		<link rel="stylesheet" href="style.css" />
+		<script defer type="module" src="./script.js"></script>
+		<title>Star Wars</title>
+	</head>
+	<body>
+		<audio id="music" loop>
+			<source
+				src="https://s.cdpn.io/1202/Star_Wars_original_opening_crawl_1977.mp3#t=00:00:08"
+			/>
+		</audio>
+
+		<div class="header">
+			<img class="img-text" src="./images/header-img.png" alt="WELCOME TO STAR WARS API" />
+			<img class="logo" id="logo" src="./images/logo.png" alt="Logo" />
+		</div>
+
+		<div class="app-container">
+			<div class="main">
+				<div class="top-search">
+					<div id="number-results"></div>
+					<input
+						class="'search'"
+						type="search"
+						name="search"
+						class="header__search"
+						placeholder="Search"
+					/>
+				</div>
+
+				<div class="results-container">
+					<table>
+						<thead id="thead"></thead>
+
+						<tbody id="table" class="trigger"></tbody>
+					</table>
+				</div>
+
+				<div class="bottom-nav">
+					<div class="bottom-buttons">PREV</div>
+					<div class="bottom-buttons" id="page-number">of 10</div>
+					<div class="bottom-buttons">NEXT</div>
+					<div class="bottom-buttons">10 per page</div>
+				</div>
+			</div>
+
+			<div class="menu" id="buttons"></div>
+		</div>
+	</body>
+</html>
