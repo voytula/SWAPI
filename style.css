@@ -131,6 +131,8 @@ img#delete-button {
 	margin-right: 0.5em;
 	width: 2em;
 	height: 2em;
+	background-color: white;
+	opacity: 0.45;
 	cursor: pointer;
 }
 
