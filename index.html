@@ -21,22 +21,24 @@
 			/>
 		</audio>
 
-		<div class="header">
+		<section class="header">
 			<img class="img-text" src="./images/header-img.png" alt="WELCOME TO STAR WARS API" />
 			<img class="logo" id="logo" src="./images/logo.png" alt="Logo" />
-		</div>
+		</section>
 
-		<div class="app-container">
+		<section class="app-container">
 			<div class="main">
 				<div class="top-search">
 					<div id="number-results"></div>
-					<input
-						class="'search'"
-						type="search"
-						name="search"
-						class="header__search"
-						placeholder="Search"
-					/>
+					<div class="search">
+						<input
+							id="search-input"
+							type="search"
+							name="search"
+							placeholder="Search character"
+						/>
+						<button type="button" id="submit-search-value">➡️</button>
+					</div>
 				</div>
 
 				<div class="results-container">
@@ -50,12 +52,19 @@
 				<div class="bottom-nav">
 					<div class="bottom-buttons">PREV</div>
 					<div class="bottom-buttons" id="page-number">of 10</div>
-					<div class="bottom-buttons">NEXT</div>
-					<div class="bottom-buttons">10 per page</div>
+					<div class="bottom-buttons" id="next-page">NEXT</div>
+					<div class="select-page">
+						<select name="select" id="select">
+							<option value="10">10</option>
+							<option value="15">15</option>
+							<option value="20">20</option>
+						</select>
+						<div class="bottom-buttons" id="per-page">per page</div>
+					</div>
 				</div>
 			</div>
 
 			<div class="menu" id="buttons"></div>
-		</div>
+		</section>
 	</body>
 </html>
