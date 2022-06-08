@@ -6,33 +6,47 @@ let currentData = {};
 let currentCategory = null;
 
 const nextPageButton = document.getElementById('next-page');
+const prevPageButton = document.getElementById('prev-page');
 
-nextPageButton.addEventListener('click', async function () {
-	if (currentData.next) {
-		await fetchAPI(currentCategory, currentData.next);
-		loadDataTable(currentCategory);
-	}
-});
+const pageNumber = document.getElementById('page-number');
 
+// next and previous buttons
+function movePage() {
+	nextPageButton.addEventListener('click', async function () {
+		if (currentData.next) {
+			await fetchAPI(currentCategory, currentData.next);
+			loadDataTable(currentCategory);
+		}
+	});
+	prevPageButton.addEventListener('click', async function () {
+		if (currentData.previous) {
+			await fetchAPI(currentCategory, currentData.previous);
+			loadDataTable(currentCategory);
+		}
+	});
+}
+
+// get ID for each item
 function getId(url) {
 	const data = url.split('/');
 	// console.log('splitted', data);
 	return data[data.length - 2];
 }
+
 //get SWAPI data
 async function fetchAPI(category, url) {
 	try {
 		const fetchUrl = url ? url : `${BASE_URL}${category}`;
-
 		const response = await fetch(fetchUrl);
 		currentData = await response.json();
+
 		currentData.results = currentData.results.map((item) => {
 			return {
 				...item,
 				id: getId(item.url),
 			};
 		});
-		// console.log(currentData.results);
+		console.log(currentData);
 	} catch (error) {
 		console.log(`O Matko Bosko, co to sie stanelo?`, error);
 	}
@@ -55,17 +69,17 @@ async function createButtons() {
 	});
 }
 
-function nextPage() {}
-
 //get correct endpoint data when button clicked
 async function buttonClick(event) {
-	console.log(event);
+	// console.log(event);
 	const category = event.target.dataset.id;
 	await fetchAPI(category);
+
 	currentCategory = category;
-	// console.log(currentData.results);
+
 	let resultCount = document.getElementById('number-results');
 	resultCount.innerHTML = `${currentData.count} results`;
+
 	loadDataTable(category);
 }
 
@@ -276,6 +290,11 @@ function loadDataTable(category) {
 	deleteButtons.forEach((button) => {
 		button.addEventListener('click', deleteElement);
 	});
+
+	pageNumber.innerHTML = `page ${currentData.results.length} of ${
+		Math.floor(currentData.count / 10) + 1
+	}`;
+	loadNextAndPreviousButtons();
 }
 
 function deleteElement(event) {
@@ -288,5 +307,15 @@ function deleteElement(event) {
 	// elementToDelete.remove()
 }
 
+function loadNextAndPreviousButtons() {
+	currentData.next
+		? (nextPageButton.style.display = 'block')
+		: (nextPageButton.style.display = 'none');
+	currentData.previous
+		? (prevPageButton.style.display = 'block')
+		: (prevPageButton.style.display = 'none');
+}
+
+movePage();
 createButtons();
 playMusic();

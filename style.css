@@ -103,13 +103,15 @@ input {
 	width: 95%;
 	height: 95%;
 }
+
 table {
 	border-collapse: collapse;
-	margin: 0;
-	padding: 0;
+	font-size: 0.9em;
+	/* margin: 0;
+	padding: 0; */
 	width: 100%;
-	table-layout: fixed;
-	height: 100%;
+	/* table-layout: fixed; */
+	height: 100% !important;
 }
 
 th:first-of-type {
@@ -158,6 +160,7 @@ img.delete-button {
 .bottom-nav {
 	width: 95%;
 	height: 5%;
+	font-size: 0.8em;
 	display: flex;
 	justify-content: right;
 	align-items: center;
@@ -175,9 +178,11 @@ img.delete-button {
 }
 #prev-page {
 	cursor: pointer;
+	display: none;
 }
 #next-page {
 	cursor: pointer;
+	display: none;
 }
 
 /* menu buttons */
