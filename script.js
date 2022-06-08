@@ -139,14 +139,16 @@ function loadDataTable(category) {
 		);
 		categoryObj.forEach((element, index) => {
 			showData += `
-	      <tr>
-	        <td>${index + 1}</td>
+	      <tr id="${element.url}">
+	        <td>${getId(element.url)}</td>
 	        <td>${element.name}</td>
 	        <td>${element.diameter}</td>
 	        <td>${element.climate}</td>
 	        <td>${element.population}</td>
 	        <td>${element.created.slice(0, 10)}</td>
-	       	<td><img id="info-button" src="./images/info.png"/><img class="delete-button" src="./images/trash.png"/></td>
+	       	<td><img id="info-button" src="./images/info.png"/><img class="delete-button" data-id="${
+				element.url
+			}" src="./images/trash.png"/></td>
 	      </tr>`;
 		});
 	} else if (category === 'films') {
@@ -165,14 +167,15 @@ function loadDataTable(category) {
 		thead.innerHTML = showLabels;
 		categoryObj.forEach((element, index) => {
 			showData += `
-
-	      <tr>
-	        <td>${index + 1}</td>
+	      <tr id="${element.url}">
+	        <td>${getId(element.url)}</td>
 	        <td>${element.title}</td>
 	        <td>${element.producer}</td>
 	        <td>${element.director}</td>
 	        <td>${element.created.slice(0, 10)}</td>
-	        <td><img id="info-button" src="./images/info.png"/><img class="delete-button" src="./images/trash.png"/></td>
+	        <td><img id="info-button" src="./images/info.png"/><img class="delete-button"  data-id="${
+				element.url
+			}" src="./images/trash.png"/></td>
 
 	      </tr>`;
 		});
@@ -193,13 +196,15 @@ function loadDataTable(category) {
 
 		categoryObj.forEach((element, index) => {
 			showData += `
-	      <tr>
-	        <td>${index + 1}</td>
+	      <tr id="${element.url}">
+	        <td>${getId(element.url)}</td>
 	        <td>${element.name}</td>
 	        <td>${element.designation}</td>
 	        <td>${element.average_height}</td>
 	        <td>${element.created.slice(0, 10)}</td>
-	     	<td><img id="info-button" src="./images/info.png"/><img class="delete-button" src="./images/trash.png"/></td>
+	     	<td><img id="info-button" src="./images/info.png"/><img class="delete-button" data-id="${
+				element.url
+			}"  src="./images/trash.png"/></td>
 	      </tr>`;
 		});
 	} else if (category === 'vehicles') {
@@ -220,14 +225,17 @@ function loadDataTable(category) {
 
 		categoryObj.forEach((element, index) => {
 			showData += `
-	      <tr>
-	        <td>${index + 1}</td>
+	      <tr id="${element.url}">
+	        <td>${getId(element.url)}</td>
 	        <td>${element.name}</td>
 	        <td>${element.model}</td>
 	        <td>${element.manufacter}</td>
 	        <td>${element.passengers}</td>
 	        <td>${element.created.slice(0, 10)}</td>
-	       	<td><img id="info-button" src="./images/info.png"/><img class="delete-button" src="./images/trash.png"/></td>
+	       	<td><img id="info-button" src="./images/info.png"/><img class="delete-button"  data-id="${
+				element.url
+			}" 
+           src="./images/trash.png"/></td>
 	      </tr>`;
 		});
 	} else if (category === 'starships') {
@@ -249,14 +257,16 @@ function loadDataTable(category) {
 
 		categoryObj.forEach((element, index) => {
 			showData += `
-	      <tr>
-	        <td>${index + 1}</td>
+	      <tr id="${element.url}">
+	        <td>${getId(element.url)}</td>
 	        <td>${element.name}</td>
 	        <td>${element.model}</td>
 	        <td>${element.consumables}</td>
 	        <td>${element.crew}</td>
 	        <td>${element.created.slice(0, 10)}</td>
-	      	<td><img id="info-button" src="./images/info.png"/><img class="delete-button" src="./images/trash.png"/></td>
+	      	<td><img id="info-button" src="./images/info.png"/><img class="delete-button"  data-id="${
+				element.url
+			}" src="./images/trash.png"/></td>
 	      </tr>`;
 		});
 	}

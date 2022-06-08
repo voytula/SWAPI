@@ -173,6 +173,12 @@ img.delete-button {
 	background: transparent;
 	color: white;
 }
+#prev-page {
+	cursor: pointer;
+}
+#next-page {
+	cursor: pointer;
+}
 
 /* menu buttons */
 .menu {
