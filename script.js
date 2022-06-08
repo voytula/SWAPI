@@ -32,6 +32,15 @@ function getId(url) {
 	// console.log('splitted', data);
 	return data[data.length - 2];
 }
+function getPageNumbers(url) {
+	let totalPages = Math.floor(currentData.count / 10) + 1;
+	if (url) {
+		const data = url.split('');
+		return data[data.length - 1];
+	} else {
+		return totalPages + 1;
+	}
+}
 
 //get SWAPI data
 async function fetchAPI(category, url) {
@@ -116,6 +125,12 @@ function playMusic() {
 function loadDataTable(category) {
 	let thead = document.getElementById('thead');
 	let table = document.getElementById('table');
+
+	// pages
+	let currentPage = getPageNumbers(currentData.next) - 1;
+	let totalPages = Math.floor(currentData.count / 10) + 1;
+	pageNumber.innerHTML = `page ${currentPage} of ${totalPages}`;
+
 	let showData = '';
 
 	if (category === 'people') {
@@ -291,9 +306,7 @@ function loadDataTable(category) {
 		button.addEventListener('click', deleteElement);
 	});
 
-	pageNumber.innerHTML = `page ${currentData.results.length} of ${
-		Math.floor(currentData.count / 10) + 1
-	}`;
+	getPageNumbers();
 	loadNextAndPreviousButtons();
 }
 
