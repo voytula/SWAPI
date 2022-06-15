@@ -73,15 +73,24 @@ body {
 	font-size: 0.88em;
 }
 
+#search-input {
+	display: none;
+	padding: 0;
+	margin: 0;
+}
+
 #submit-search-value {
+	display: none;
 	background: transparent;
 	border: none;
 	cursor: pointer;
+	padding: 0;
+	margin: 0;
 }
 
 #number-results {
 	padding-left: 1em;
-	font-size: 0.8em;
+	font-size: 0.6em;
 }
 
 input {
@@ -170,7 +179,7 @@ img.delete-button {
 	font-size: 0.8em;
 }
 .select-page {
-	display: flex;
+	display: none;
 }
 #select {
 	background: transparent;
@@ -208,4 +217,17 @@ img.delete-button {
 	border-radius: 5px;
 	background-color: rgba(94, 94, 108, 0.452);
 	color: white;
+}
+
+#text {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	font-size: 1.5em;
+	text-align: justify;
+	overflow: hidden;
+	transform-origin: 50% 100%;
+	transform: perspective(350px) rotateX(25deg);
+	animation: 81s linear 13s;
 }

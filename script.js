@@ -2,36 +2,55 @@
 const BASE_URL = 'https://swapi.dev/api/';
 import { Super, People, Planets, Films, Species, Vehicles, Starships } from './classes.js';
 
-let currentData = {};
+let currentData = null;
 let currentCategory = null;
 
 const nextPageButton = document.getElementById('next-page');
 const prevPageButton = document.getElementById('prev-page');
 
 const pageNumber = document.getElementById('page-number');
+const searchInput = document.getElementById('search-input');
+const submitSearchButton = document.getElementById('submit-search-value');
+const resultsPerPage = document.querySelector('.select-page');
+const introText = document.getElementById('text');
 
-// next and previous buttons
+//-------------search for an item in current catergory---------------------
+async function search() {
+	const searchInputValue = document.getElementById('search-input').value;
+	let endpoint = `?search=${searchInputValue}`;
+	const response = await fetch(`${BASE_URL}${currentCategory}${endpoint}`);
+	currentData = await response.json();
+
+	howManyPages();
+	howManyResults();
+	// console.log(currentData);
+	renderDataTable(currentCategory);
+}
+submitSearchButton.addEventListener('click', search);
+
+//----------------next and previous buttons PAGINATION------------
 function movePage() {
 	nextPageButton.addEventListener('click', async function () {
 		if (currentData.next) {
 			await fetchAPI(currentCategory, currentData.next);
-			loadDataTable(currentCategory);
+			renderDataTable(currentCategory);
 		}
 	});
 	prevPageButton.addEventListener('click', async function () {
 		if (currentData.previous) {
 			await fetchAPI(currentCategory, currentData.previous);
-			loadDataTable(currentCategory);
+			renderDataTable(currentCategory);
 		}
 	});
 }
 
-// get ID for each item
+//-----------------get ID for each item----------------------
 function getId(url) {
 	const data = url.split('/');
 	// console.log('splitted', data);
 	return data[data.length - 2];
 }
+
 function getPageNumbers(url) {
 	let totalPages = Math.floor(currentData.count / 10) + 1;
 	if (url) {
@@ -42,12 +61,13 @@ function getPageNumbers(url) {
 	}
 }
 
-//get SWAPI data
+//-------------------get SWAPI data---------------------------
 async function fetchAPI(category, url) {
 	try {
 		const fetchUrl = url ? url : `${BASE_URL}${category}`;
 		const response = await fetch(fetchUrl);
 		currentData = await response.json();
+		// console.log(currentData);
 
 		currentData.results = currentData.results.map((item) => {
 			return {
@@ -55,13 +75,12 @@ async function fetchAPI(category, url) {
 				id: getId(item.url),
 			};
 		});
-		console.log(currentData);
 	} catch (error) {
 		console.log(`O Matko Bosko, co to sie stanelo?`, error);
 	}
 }
 
-//get data for buttons and create them
+//-------------get data for buttons and create them----------------------
 async function createButtons() {
 	const response = await fetch(BASE_URL);
 	const data = await response.json();
@@ -78,7 +97,7 @@ async function createButtons() {
 	});
 }
 
-//get correct endpoint data when button clicked
+//--------------get correct endpoint data when button clicked-----------------
 async function buttonClick(event) {
 	// console.log(event);
 	const category = event.target.dataset.id;
@@ -86,13 +105,11 @@ async function buttonClick(event) {
 
 	currentCategory = category;
 
-	let resultCount = document.getElementById('number-results');
-	resultCount.innerHTML = `${currentData.count} results`;
-
-	loadDataTable(category);
+	howManyResults();
+	renderDataTable(category);
 }
 
-//play some decent music
+//----------------play some decent music---------------------
 function playMusic() {
 	let musicButton = document.getElementById('logo');
 	let isPlaying = false;
@@ -121,23 +138,31 @@ function playMusic() {
 //     );
 // }
 
-// load endpoint data on table
-function loadDataTable(category) {
-	let thead = document.getElementById('thead');
-	let table = document.getElementById('table');
-
-	// pages
+//------show amount of pages available-----------
+function howManyPages() {
 	let currentPage = getPageNumbers(currentData.next) - 1;
 	let totalPages = Math.floor(currentData.count / 10) + 1;
 	pageNumber.innerHTML = `page ${currentPage} of ${totalPages}`;
+}
+//------show how many results---------------
+function howManyResults() {
+	let resultCount = document.getElementById('number-results');
+	resultCount.innerHTML = `${currentData.count} results`;
+}
+
+//-----------------render endpoint data on table--------------------
+function renderDataTable(currentCategory) {
+	let thead = document.getElementById('thead');
+	let table = document.getElementById('table');
 
 	let showData = '';
-
-	if (category === 'people') {
+	if (currentCategory === 'people') {
 		let categoryObj = currentData.results.map(
 			({ name, url, created, height, mass, gender }) =>
 				new People(name, url, created, height, mass, gender)
 		);
+		// console.log(currentData);
+
 		let showLabels = `<tr>
 			<th>ID</th>
 			<th>NAME</th>
@@ -148,7 +173,7 @@ function loadDataTable(category) {
 			<th>ACTIONS</th>
 		</tr>`;
 		thead.innerHTML = showLabels;
-		categoryObj.forEach((element, index) => {
+		categoryObj.forEach((element) => {
 			showData += `
 	      <tr id="${element.url}">
 	        <td>${getId(element.url)}</td>
@@ -161,12 +186,12 @@ function loadDataTable(category) {
 			data-id="${element.url}" src="./images/trash.png"/></td>
 	      </tr>`;
 		});
-	} else if (category === 'planets') {
+	} else if (currentCategory === 'planets') {
 		let categoryObj = currentData.results.map(
 			({ name, url, created, diameter, climate, population }) =>
 				new Planets(name, url, created, diameter, climate, population)
 		);
-		categoryObj.forEach((element, index) => {
+		categoryObj.forEach((element) => {
 			showData += `
 	      <tr id="${element.url}">
 	        <td>${getId(element.url)}</td>
@@ -180,7 +205,7 @@ function loadDataTable(category) {
 			}" src="./images/trash.png"/></td>
 	      </tr>`;
 		});
-	} else if (category === 'films') {
+	} else if (currentCategory === 'films') {
 		let categoryObj = currentData.results.map(
 			({ name, url, created, title, producer, director }) =>
 				new Films(name, url, created, title, producer, director)
@@ -194,7 +219,7 @@ function loadDataTable(category) {
 			<th>ACTIONS</th>
 		</tr>`;
 		thead.innerHTML = showLabels;
-		categoryObj.forEach((element, index) => {
+		categoryObj.forEach((element) => {
 			showData += `
 	      <tr id="${element.url}">
 	        <td>${getId(element.url)}</td>
@@ -208,7 +233,7 @@ function loadDataTable(category) {
 
 	      </tr>`;
 		});
-	} else if (category === 'species') {
+	} else if (currentCategory === 'species') {
 		let categoryObj = currentData.results.map(
 			({ name, url, created, designation, average_height }) =>
 				new Species(name, url, created, designation, average_height)
@@ -223,7 +248,7 @@ function loadDataTable(category) {
 		</tr>`;
 		thead.innerHTML = showLabels;
 
-		categoryObj.forEach((element, index) => {
+		categoryObj.forEach((element) => {
 			showData += `
 	      <tr id="${element.url}">
 	        <td>${getId(element.url)}</td>
@@ -236,7 +261,7 @@ function loadDataTable(category) {
 			}"  src="./images/trash.png"/></td>
 	      </tr>`;
 		});
-	} else if (category === 'vehicles') {
+	} else if (currentCategory === 'vehicles') {
 		let categoryObj = currentData.results.map(
 			({ name, url, created, model, manufacter, passengers }) =>
 				new Vehicles(name, url, created, model, manufacter, passengers)
@@ -252,7 +277,7 @@ function loadDataTable(category) {
 		</tr>`;
 		thead.innerHTML = showLabels;
 
-		categoryObj.forEach((element, index) => {
+		categoryObj.forEach((element) => {
 			showData += `
 	      <tr id="${element.url}">
 	        <td>${getId(element.url)}</td>
@@ -267,7 +292,7 @@ function loadDataTable(category) {
            src="./images/trash.png"/></td>
 	      </tr>`;
 		});
-	} else if (category === 'starships') {
+	} else if (currentCategory === 'starships') {
 		let categoryObj = currentData.results.map(
 			({ name, url, created, model, consumables, crew }) =>
 				new Starships(name, url, created, model, consumables, crew)
@@ -284,7 +309,7 @@ function loadDataTable(category) {
 		</tr>`;
 		thead.innerHTML = showLabels;
 
-		categoryObj.forEach((element, index) => {
+		categoryObj.forEach((element) => {
 			showData += `
 	      <tr id="${element.url}">
 	        <td>${getId(element.url)}</td>
@@ -306,29 +331,52 @@ function loadDataTable(category) {
 		button.addEventListener('click', deleteElement);
 	});
 
+	howManyPages();
 	getPageNumbers();
-	loadNextAndPreviousButtons();
+	showPageNavAndInfo();
 }
 
+//-----------delete an item by id------------------------
 function deleteElement(event) {
-	console.log('delete', event.target.dataset.id);
+	// console.log('delete', event.target.dataset.id);
 	const { id } = event.target.dataset;
 	currentData.results = currentData.results.filter((item) => item.url !== id);
-	loadDataTable(currentCategory);
-	console.log(currentData.results);
+	renderDataTable(currentCategory);
+	// console.log(currentData.results);
 	// const elementToDelete = document.getElementById(id);
 	// elementToDelete.remove()
 }
 
-function loadNextAndPreviousButtons() {
+//----------------show next and prev buttons when available---------------------------
+function showPageNavAndInfo() {
 	currentData.next
 		? (nextPageButton.style.display = 'block')
 		: (nextPageButton.style.display = 'none');
 	currentData.previous
 		? (prevPageButton.style.display = 'block')
 		: (prevPageButton.style.display = 'none');
+	currentData ? (searchInput.style.display = 'block') : (searchInput.style.display = 'none');
+	currentData
+		? (submitSearchButton.style.display = 'block')
+		: (submitSearchButton.style.display = 'none');
+	currentData ? (resultsPerPage.style.display = 'flex') : (resultsPerPage.style.display = 'none');
+	currentData ? (introText.style.display = 'none') : (introText.style.display = 'flex');
 }
 
 movePage();
 createButtons();
 playMusic();
+
+let allData = [];
+async function getAllData(category) {
+	let url = `${BASE_URL}${category}`;
+	while (url) {
+		const response = await fetch(url);
+		const data = await response.json();
+		allData.push(...data.results);
+		url = data.next;
+		// console.log(allResults);
+	}
+	// return allData;
+	console.log(allData);
+}
