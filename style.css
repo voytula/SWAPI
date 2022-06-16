@@ -35,8 +35,10 @@ body {
 /* app with results container and menu with buttons on the right */
 .app-container {
 	display: flex;
-	width: 75vw;
+	min-width: 75vw;
 	height: 60vh;
+	overflow: hidden;
+	position: relative;
 }
 
 .main {
@@ -111,6 +113,15 @@ input {
 .results-container {
 	width: 95%;
 	height: 95%;
+	overflow: hidden;
+	overflow-x: hidden;
+	background-color: transparent;
+}
+
+#text {
+	line-height: 1.5em;
+	font-size: 1.3em;
+	text-align: justify;
 }
 
 table {
@@ -119,8 +130,10 @@ table {
 	/* margin: 0;
 	padding: 0; */
 	width: 100%;
+	height: 100%;
+	position: relative;
 	/* table-layout: fixed; */
-	height: 100% !important;
+	/* height: 100% !important; */
 }
 
 th:first-of-type {
@@ -217,17 +230,4 @@ img.delete-button {
 	border-radius: 5px;
 	background-color: rgba(94, 94, 108, 0.452);
 	color: white;
-}
-
-#text {
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-	font-size: 1.5em;
-	text-align: justify;
-	overflow: hidden;
-	transform-origin: 50% 100%;
-	transform: perspective(350px) rotateX(25deg);
-	animation: 81s linear 13s;
 }

@@ -13,6 +13,7 @@ const searchInput = document.getElementById('search-input');
 const submitSearchButton = document.getElementById('submit-search-value');
 const resultsPerPage = document.querySelector('.select-page');
 const introText = document.getElementById('text');
+const scroll = document.querySelector('.results-container');
 
 //-------------search for an item in current catergory---------------------
 async function search() {
@@ -361,6 +362,10 @@ function showPageNavAndInfo() {
 		: (submitSearchButton.style.display = 'none');
 	currentData ? (resultsPerPage.style.display = 'flex') : (resultsPerPage.style.display = 'none');
 	currentData ? (introText.style.display = 'none') : (introText.style.display = 'flex');
+	currentData
+		? ((scroll.style.overflow = 'scroll'), (scroll.style.overflowX = 'hidden'))
+		: (scroll.style.overflow = 'hidden');
+	getAllData(currentCategory);
 }
 
 movePage();
@@ -368,15 +373,81 @@ createButtons();
 playMusic();
 
 let allData = [];
-async function getAllData(category) {
-	let url = `${BASE_URL}${category}`;
+async function getAllData(currentCategory) {
+	allData = [];
+	let url = `${BASE_URL}${currentCategory}`;
 	while (url) {
 		const response = await fetch(url);
 		const data = await response.json();
 		allData.push(...data.results);
 		url = data.next;
+		// console.log(data);
+		// renderDataTable(currentCategory);
+		// console.log(allData);
 		// console.log(allResults);
 	}
-	// return allData;
-	console.log(allData);
+	return allData;
 }
+const selectHowManyResults = document.getElementById('select');
+selectHowManyResults.addEventListener('change', resPerPage);
+
+function resPerPage() {
+	let tenResults = [];
+	let twentysixResults = [];
+	let seventeenResults = [];
+	let thirtyfourResults = [];
+	if (this.value === '10') {
+		for (let i = 0; i < allData.length; i++) {
+			tenResults.push(allData[i]);
+		}
+		currentData.results = tenResults.splice(0, 10);
+	} else if (this.value === '17') {
+		for (let i = 0; i < allData.length; i++) {
+			seventeenResults.push(allData[i]);
+		}
+		currentData.results = seventeenResults.splice(0, 17);
+	} else if (this.value === '26') {
+		for (let i = 0; i < allData.length; i++) {
+			twentysixResults.push(allData[i]);
+		}
+
+		currentData.results = twentysixResults.splice(0, 26);
+	} else if (this.value === '34') {
+		for (let i = 0; i < allData.length; i++) {
+			thirtyfourResults.push(allData[i]);
+		}
+		currentData.results = thirtyfourResults.splice(0, 34);
+	}
+	renderDataTable(currentCategory);
+}
+
+// const selectHowManyResults = document.getElementById('select');
+// selectHowManyResults.addEventListener('change', function () {
+// 	// console.log('you selected: ', this.value);
+// 	if (this.value === '10') {
+// 		let tenResults = [];
+// 		for (let i = 0; i < allData.length; i++) {
+// 			tenResults.push(allData[i]);
+// 		}
+// 		console.log(tenResults.slice(0, 10));
+// 	} else if (this.value === '17') {
+// 		let seventeenResults = [];
+// 		for (let i = 0; i < allData.length; i++) {
+// 			seventeenResults.push(allData[i]);
+// 			// renderDataTable(currentCategory);
+// 		}
+// 		console.log(seventeenResults.slice(0, 17));
+// 	} else if (this.value === '26') {
+// 		let twentysixResults = [];
+// 		for (let i = 0; i < allData.length; i++) {
+// 			twentysixResults.push(allData[i]);
+// 		}
+// 		console.log(twentysixResults.slice(0, 26));
+// 	} else if (this.value === '34') {
+// 		let thirtyfourResults = [];
+// 		for (let i = 0; i < allData.length; i++) {
+// 			thirtyfourResults.push(allData[i]);
+// 		}
+// 		console.log(thirtyfourResults.slice(0, 34));
+// 	}
+// });
