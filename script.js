@@ -1,9 +1,12 @@
 ('use strict');
+// window.history.forward(1);
+
 const BASE_URL = 'https://swapi.dev/api/';
 import { Super, People, Planets, Films, Species, Vehicles, Starships } from './classes.js';
 
 let currentData = null;
 let currentCategory = null;
+let allData = [];
 
 const nextPageButton = document.getElementById('next-page');
 const prevPageButton = document.getElementById('prev-page');
@@ -14,6 +17,10 @@ const submitSearchButton = document.getElementById('submit-search-value');
 const resultsPerPage = document.querySelector('.select-page');
 const introText = document.getElementById('text');
 const scroll = document.querySelector('.results-container');
+
+const modalDelete = document.getElementById('delete-modal');
+const yesDelete = document.getElementById('delete-yes');
+const noDelete = document.getElementById('delete-no');
 
 //-------------search for an item in current catergory---------------------
 async function search() {
@@ -28,6 +35,43 @@ async function search() {
 	renderDataTable(currentCategory);
 }
 submitSearchButton.addEventListener('click', search);
+
+//--------- get all SWAPI data / lekko mowiac troche zerznieta funkcja od kolegi z grupy, ktory ja udostepnil----------
+async function getAllData(currentCategory) {
+	allData = [];
+	let urlAll = `${BASE_URL}${currentCategory}`;
+
+	while (urlAll) {
+		const response = await fetch(urlAll);
+		const data = await response.json();
+		allData.push(...data.results);
+		urlAll = data.next;
+		// console.log(allData);
+	}
+	// console.log(allData);
+
+	return allData;
+}
+
+//----------------show next and prev buttons when available---------------------------
+function showPageNavAndInfo() {
+	currentData.next
+		? (nextPageButton.style.display = 'block')
+		: (nextPageButton.style.display = 'none');
+	currentData.previous
+		? (prevPageButton.style.display = 'block')
+		: (prevPageButton.style.display = 'none');
+	currentData ? (searchInput.style.display = 'block') : (searchInput.style.display = 'none');
+	currentData
+		? (submitSearchButton.style.display = 'block')
+		: (submitSearchButton.style.display = 'none');
+	currentData ? (resultsPerPage.style.display = 'flex') : (resultsPerPage.style.display = 'none');
+	currentData ? (introText.style.display = 'none') : (introText.style.display = 'flex');
+	currentData
+		? ((scroll.style.overflow = 'scroll'), (scroll.style.overflowX = 'hidden'))
+		: (scroll.style.overflow = 'hidden');
+	getAllData(currentCategory);
+}
 
 //----------------next and previous buttons PAGINATION------------
 function movePage() {
@@ -125,19 +169,41 @@ function playMusic() {
 		}
 	});
 }
-// REFACTOR
-// const collections = {
-// 	// id, actions
-//   people: ["name", "height", "mass", "gender", "created"],
-// };
 
-// function renderCollection(category) {
-// 	collections[category]
-//     let categoryObj = currentData.results.map(
-//       ({ name, url, created, height, mass, gender }) =>
-//         new People(name, url, created, height, mass, gender)
-//     );
-// }
+//------------ show selected amount of results ----------------------
+const selectHowManyResults = document.getElementById('select');
+selectHowManyResults.addEventListener('change', resPerPage);
+
+function resPerPage() {
+	let tenResults = [];
+	let seventeenResults = [];
+	let twentysixResults = [];
+	let thirtyfourResults = [];
+	if (this.value === '10') {
+		for (let i = 0; i < allData.length; i++) {
+			tenResults.push(allData[i]);
+			console.log(allData);
+		}
+		currentData.results = tenResults.splice(0, 10);
+	} else if (this.value === '17') {
+		for (let i = 0; i < allData.length; i++) {
+			seventeenResults.push(allData[i]);
+		}
+		currentData.results = seventeenResults.splice(0, 17);
+	} else if (this.value === '26') {
+		for (let i = 0; i < allData.length; i++) {
+			twentysixResults.push(allData[i]);
+		}
+
+		currentData.results = twentysixResults.splice(0, 26);
+	} else if (this.value === '34') {
+		for (let i = 0; i < allData.length; i++) {
+			thirtyfourResults.push(allData[i]);
+		}
+		currentData.results = thirtyfourResults.splice(0, 34);
+	}
+	renderDataTable(currentCategory);
+}
 
 //------show amount of pages available-----------
 function howManyPages() {
@@ -183,7 +249,7 @@ function renderDataTable(currentCategory) {
 	        <td>${element.mass}</td>
 	        <td>${element.gender}</td>
 	        <td>${element.created.slice(0, 10)}</td>
-	        <td><img id="info-button" src="./images/info.png"/><img class="delete-button"
+	        <td><img class="info-button" src="./images/info.png"/><img class="delete-button"
 			data-id="${element.url}" src="./images/trash.png"/></td>
 	      </tr>`;
 		});
@@ -201,7 +267,7 @@ function renderDataTable(currentCategory) {
 	        <td>${element.climate}</td>
 	        <td>${element.population}</td>
 	        <td>${element.created.slice(0, 10)}</td>
-	       	<td><img id="info-button" src="./images/info.png"/><img class="delete-button" data-id="${
+	       	<td><img class="info-button" src="./images/info.png"/><img class="delete-button" data-id="${
 				element.url
 			}" src="./images/trash.png"/></td>
 	      </tr>`;
@@ -228,7 +294,7 @@ function renderDataTable(currentCategory) {
 	        <td>${element.producer}</td>
 	        <td>${element.director}</td>
 	        <td>${element.created.slice(0, 10)}</td>
-	        <td><img id="info-button" src="./images/info.png"/><img class="delete-button"  data-id="${
+	        <td><img class="info-button" src="./images/info.png"/><img class="delete-button"  data-id="${
 				element.url
 			}" src="./images/trash.png"/></td>
 
@@ -257,7 +323,7 @@ function renderDataTable(currentCategory) {
 	        <td>${element.designation}</td>
 	        <td>${element.average_height}</td>
 	        <td>${element.created.slice(0, 10)}</td>
-	     	<td><img id="info-button" src="./images/info.png"/><img class="delete-button" data-id="${
+	     	<td><img class="info-button" src="./images/info.png"/><img class="delete-button" data-id="${
 				element.url
 			}"  src="./images/trash.png"/></td>
 	      </tr>`;
@@ -287,7 +353,7 @@ function renderDataTable(currentCategory) {
 	        <td>${element.manufacter}</td>
 	        <td>${element.passengers}</td>
 	        <td>${element.created.slice(0, 10)}</td>
-	       	<td><img id="info-button" src="./images/info.png"/><img class="delete-button"  data-id="${
+	       	<td><img class="info-button" src="./images/info.png"/><img class="delete-button"  data-id="${
 				element.url
 			}" 
            src="./images/trash.png"/></td>
@@ -319,17 +385,34 @@ function renderDataTable(currentCategory) {
 	        <td>${element.consumables}</td>
 	        <td>${element.crew}</td>
 	        <td>${element.created.slice(0, 10)}</td>
-	      	<td><img id="info-button" src="./images/info.png"/><img class="delete-button"  data-id="${
+	      	<td><img class="info-button" src="./images/info.png"/><img class="delete-button"  data-id="${
 				element.url
 			}" src="./images/trash.png"/></td>
 	      </tr>`;
 		});
 	}
 	table.innerHTML = showData;
-
+	//-------------listener for delete buttons----------------
 	const deleteButtons = document.querySelectorAll('.delete-button');
 	deleteButtons.forEach((button) => {
 		button.addEventListener('click', deleteElement);
+		// button.addEventListener('click', () => {
+		// 	modalDelete.style.display = 'flex';
+		// 	yesDelete.addEventListener('click', () => {
+		// 		let rowId = button.getAttribute('data-id');
+		// 		// document.getElementById('table').deleteRow(getId(rowId) - 1);
+		// 		console.log(rowId);
+		// 	});
+		// 	noDelete.addEventListener('click', () => {
+		// 		modalDelete.style.display = 'none';
+		// 	});
+		// });
+	});
+
+	//-------------listener for details buttons----------------
+	const infoButtons = document.querySelectorAll('.info-button');
+	infoButtons.forEach((button) => {
+		button.addEventListener('click', elementDetails);
 	});
 
 	howManyPages();
@@ -337,9 +420,22 @@ function renderDataTable(currentCategory) {
 	showPageNavAndInfo();
 }
 
+//-----------item details-------------
+async function elementDetails(event) {
+	const detailsModal = document.getElementById('details-modal');
+	// console.log(event.path[2].id);
+	const item = event.path[2].id;
+	const response = await fetch(item);
+	const data = await response.json();
+	// console.log(data);
+	detailsModal.style.display = 'flex';
+	detailsModal.innerHTML = data;
+}
+
 //-----------delete an item by id------------------------
 function deleteElement(event) {
 	// console.log('delete', event.target.dataset.id);
+	// console.log('delete', event);
 	const { id } = event.target.dataset;
 	currentData.results = currentData.results.filter((item) => item.url !== id);
 	renderDataTable(currentCategory);
@@ -348,106 +444,20 @@ function deleteElement(event) {
 	// elementToDelete.remove()
 }
 
-//----------------show next and prev buttons when available---------------------------
-function showPageNavAndInfo() {
-	currentData.next
-		? (nextPageButton.style.display = 'block')
-		: (nextPageButton.style.display = 'none');
-	currentData.previous
-		? (prevPageButton.style.display = 'block')
-		: (prevPageButton.style.display = 'none');
-	currentData ? (searchInput.style.display = 'block') : (searchInput.style.display = 'none');
-	currentData
-		? (submitSearchButton.style.display = 'block')
-		: (submitSearchButton.style.display = 'none');
-	currentData ? (resultsPerPage.style.display = 'flex') : (resultsPerPage.style.display = 'none');
-	currentData ? (introText.style.display = 'none') : (introText.style.display = 'flex');
-	currentData
-		? ((scroll.style.overflow = 'scroll'), (scroll.style.overflowX = 'hidden'))
-		: (scroll.style.overflow = 'hidden');
-	getAllData(currentCategory);
-}
-
 movePage();
 createButtons();
 playMusic();
 
-let allData = [];
-async function getAllData(currentCategory) {
-	allData = [];
-	let url = `${BASE_URL}${currentCategory}`;
-	while (url) {
-		const response = await fetch(url);
-		const data = await response.json();
-		allData.push(...data.results);
-		url = data.next;
-		// console.log(data);
-		// renderDataTable(currentCategory);
-		// console.log(allData);
-		// console.log(allResults);
-	}
-	return allData;
-}
-const selectHowManyResults = document.getElementById('select');
-selectHowManyResults.addEventListener('change', resPerPage);
+// REFACTOR
+// const collections = {
+// 	// id, actions
+//   people: ["name", "height", "mass", "gender", "created"],
+// };
 
-function resPerPage() {
-	let tenResults = [];
-	let twentysixResults = [];
-	let seventeenResults = [];
-	let thirtyfourResults = [];
-	if (this.value === '10') {
-		for (let i = 0; i < allData.length; i++) {
-			tenResults.push(allData[i]);
-		}
-		currentData.results = tenResults.splice(0, 10);
-	} else if (this.value === '17') {
-		for (let i = 0; i < allData.length; i++) {
-			seventeenResults.push(allData[i]);
-		}
-		currentData.results = seventeenResults.splice(0, 17);
-	} else if (this.value === '26') {
-		for (let i = 0; i < allData.length; i++) {
-			twentysixResults.push(allData[i]);
-		}
-
-		currentData.results = twentysixResults.splice(0, 26);
-	} else if (this.value === '34') {
-		for (let i = 0; i < allData.length; i++) {
-			thirtyfourResults.push(allData[i]);
-		}
-		currentData.results = thirtyfourResults.splice(0, 34);
-	}
-	renderDataTable(currentCategory);
-}
-
-// const selectHowManyResults = document.getElementById('select');
-// selectHowManyResults.addEventListener('change', function () {
-// 	// console.log('you selected: ', this.value);
-// 	if (this.value === '10') {
-// 		let tenResults = [];
-// 		for (let i = 0; i < allData.length; i++) {
-// 			tenResults.push(allData[i]);
-// 		}
-// 		console.log(tenResults.slice(0, 10));
-// 	} else if (this.value === '17') {
-// 		let seventeenResults = [];
-// 		for (let i = 0; i < allData.length; i++) {
-// 			seventeenResults.push(allData[i]);
-// 			// renderDataTable(currentCategory);
-// 		}
-// 		console.log(seventeenResults.slice(0, 17));
-// 	} else if (this.value === '26') {
-// 		let twentysixResults = [];
-// 		for (let i = 0; i < allData.length; i++) {
-// 			twentysixResults.push(allData[i]);
-// 		}
-// 		console.log(twentysixResults.slice(0, 26));
-// 	} else if (this.value === '34') {
-// 		let thirtyfourResults = [];
-// 		for (let i = 0; i < allData.length; i++) {
-// 			thirtyfourResults.push(allData[i]);
-// 		}
-// 		console.log(thirtyfourResults.slice(0, 34));
-// 	}
-// });
+// function renderCollection(category) {
+// 	collections[category]
+//     let categoryObj = currentData.results.map(
+//       ({ name, url, created, height, mass, gender }) =>
+//         new People(name, url, created, height, mass, gender)
+//     );
+// }
